@@ -26,4 +26,9 @@ const profileReducer = reducerWithInitialState(init)
 		address: { ...state.address, ...payload}
 	}))
 
+	.case(profileActions.searchAddress.done, (state, payload) => ({
+		...state,
+		address: { ...state.address, ...payload.result }
+	}))
+
 export default profileReducer
