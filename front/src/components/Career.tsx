@@ -3,6 +3,7 @@ import { TextField, Grid, InputLabel, Typography, Button } from "@material-ui/co
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from '../domain/entity/rootState';
 import { PROFILE } from "../domain/services/profile";
+import { exitEmptyCareers } from "../domain/services/career";
 import { Career as ICareer } from '../domain/entity/career'
 import profileActions from "../store/profile/actions";
 
@@ -12,14 +13,18 @@ const Career = () => {
     const classes = useStyles()
     const dispatch = useDispatch()
     const careers = useSelector((state: RootState) => state.profile.careers)
+    const isAbleToAddCarrer = exitEmptyCareers(careers)
 
     const handleChange = (member: Partial<ICareer>, i: number) => {
         dispatch(profileActions.setCareer({ career: member, index: i}))
     }
 
-
     const handleAddCareer = () => {
         dispatch(profileActions.addCareer({}))
+    }
+
+    const handleDeleteCareer = (i: number) => {
+        dispatch(profileActions.deleteCareer(i))
     }
 
     return (
@@ -44,6 +49,16 @@ const Career = () => {
                     onChange={ e => handleChange({ position: e.target.value}, i)}
                 />
                 <div className={classes.careerSpan}>
+                    <Button
+                        className={classes.button}
+                        onClick={() => handleDeleteCareer(i)}
+                        fullWidth
+                        variant="outlined"
+                        disabled={isAbleToAddCarrer}
+                        color="secondary"
+                    >
+                        職歴 { i + 1}を削除
+                    </Button>
                     <InputLabel shrink>{PROFILE.CAREERS.SPAN}</InputLabel>
                     <Grid
                         container
